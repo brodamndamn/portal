@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # 本脚本存放于 /opt/resume-projects/portal/deploy/lib，因此上三级是三个仓库的共同目录。
-PROJECT_ROOT="${PROJECT_ROOT:-$(cd "${SCRIPT_DIR}/../../.." && pwd)}"
+PROJECT_ROOT="${PROJECT_ROOT:-$(cd "${LIB_DIR}/../../.." && pwd)}"
 WEB_ROOT="${WEB_ROOT:-/var/www}"
 APP_USER="${APP_USER:-www-data}"
 APP_GROUP="${APP_GROUP:-www-data}"
