@@ -1,0 +1,23 @@
+[Unit]
+Description=ISAAC 玩家社区 FastAPI 服务
+After=network-online.target mysql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/resume-projects/ISAAC/backend
+EnvironmentFile=/opt/resume-projects/ISAAC/backend/.env
+ExecStart=/opt/resume-projects/ISAAC/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 1
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=20
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/resume-projects/ISAAC/backend/uploads
+
+[Install]
+WantedBy=multi-user.target

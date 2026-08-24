@@ -1,5 +1,7 @@
 # 双项目引导页与统一部署
 
+完整服务器部署请阅读 [DEPLOYMENT.md](DEPLOYMENT.md)。
+
 `portal/` 是独立静态入口，不依赖 ISAAC 或 ResearchFlow 的前端构建。部署后的公开路径如下：
 
 | 路径 | 内容 |
