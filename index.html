@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="个人项目入口：ISAAC 玩家社区与 ResearchFlow 深度研究 Agent"
+    />
+    <title>项目入口 · Portfolio Gateway</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="portal-shell">
+      <header class="portal-header">
+        <a class="wordmark" href="/" aria-label="返回项目入口">
+          <span class="wordmark-mark" aria-hidden="true">R</span>
+          <span>Resume Projects</span>
+        </a>
+        <p class="availability"><span aria-hidden="true"></span>在线演示</p>
+      </header>
+
+      <section class="intro" aria-labelledby="portal-title">
+        <p class="kicker">PORTFOLIO ROUTER · 作品集入口</p>
+        <h1 id="portal-title">两个项目，<br />两种解决问题的方式。</h1>
+        <p class="intro-copy">
+          一个面向游戏社区的完整全栈产品，一个强调规划、检索与引用校验的研究 Agent。
+          请选择项目进入实际演示。
+        </p>
+      </section>
+
+      <div class="route-rail" aria-label="项目路由结构">
+        <span class="route-origin">公网入口 /</span>
+        <span class="route-line" aria-hidden="true"></span>
+        <span class="route-count">02 个可访问项目</span>
+      </div>
+
+      <section class="project-grid" aria-label="项目列表">
+        <article class="project-card project-card-isaac">
+          <div class="card-topline">
+            <span class="project-index">PROJECT 02</span>
+            <span class="project-path">/isaac/</span>
+          </div>
+          <div class="project-symbol isaac-symbol" aria-hidden="true">I</div>
+          <div class="project-content">
+            <p class="project-type">全栈社区产品</p>
+            <h2>ISAAC 玩家社区</h2>
+            <p class="project-summary">
+              《以撒的结合》中文资料库与玩家社区，覆盖道具、角色、结局、攻略发布、收藏和用户系统。
+            </p>
+            <ul class="tech-list" aria-label="ISAAC 技术栈">
+              <li>React</li>
+              <li>TypeScript</li>
+              <li>FastAPI</li>
+              <li>MySQL</li>
+              <li>JWT</li>
+            </ul>
+          </div>
+          <a class="project-link" href="/isaac/">
+            进入 ISAAC
+            <span aria-hidden="true">↗</span>
+          </a>
+        </article>
+
+        <article class="project-card project-card-research">
+          <div class="card-topline">
+            <span class="project-index">PROJECT 01</span>
+            <span class="project-path">/research/</span>
+          </div>
+          <div class="project-symbol research-symbol" aria-hidden="true">R</div>
+          <div class="project-content">
+            <p class="project-type">深度研究 Agent</p>
+            <h2>ResearchFlow</h2>
+            <p class="project-summary">
+              将问题拆分为可审核计划，并行搜索多源证据，生成带引用、可追溯的中文研究报告。
+            </p>
+            <ul class="tech-list" aria-label="ResearchFlow 技术栈">
+              <li>LangGraph</li>
+              <li>React</li>
+              <li>FastAPI</li>
+              <li>Tavily</li>
+              <li>SSE</li>
+            </ul>
+          </div>
+          <a class="project-link" href="/research/">
+            进入 ResearchFlow
+            <span aria-hidden="true">↗</span>
+          </a>
+        </article>
+      </section>
+
+      <footer class="portal-footer">
+        <p>独立部署 · 同一公网入口 · 响应式访问</p>
+        <p>项目演示数据仅用于作品展示</p>
+      </footer>
+    </main>
+  </body>
+</html>
