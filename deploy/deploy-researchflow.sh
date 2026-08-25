@@ -14,7 +14,12 @@ require_env_file "${BACKEND_DIR}/.env"
 echo "构建 ResearchFlow 前端……"
 # 2 核 2G 服务器在 pnpm 的默认并发下载、解压时可能被内存压力拖死。
 # 构建只在部署时执行，优先保证稳定性而不是首次安装速度。
-( cd "${FRONTEND_DIR}"; pnpm install --frozen-lockfile --network-concurrency=1 --child-concurrency=1 --reporter=append-only; pnpm build )
+(
+  cd "${FRONTEND_DIR}"
+  pnpm install --frozen-lockfile --network-concurrency=1 --child-concurrency=1 --reporter=append-only
+  # 给 Uvicorn、Nginx 与系统保留内存，防止 Node 在 2G 小服务器上抢占全部资源。
+  NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=768}" pnpm build
+)
 require_file "${FRONTEND_DIR}/dist/index.html"
 echo "安装 ResearchFlow 后端依赖……"
 ( cd "${BACKEND_DIR}"; "${PYTHON_BIN}" -m venv .venv; .venv/bin/python -m pip install --upgrade pip; .venv/bin/python -m pip install . )
