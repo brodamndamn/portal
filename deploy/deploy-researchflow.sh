@@ -12,7 +12,9 @@ require_file "${FRONTEND_DIR}/pnpm-lock.yaml"
 require_file "${BACKEND_DIR}/pyproject.toml"
 require_env_file "${BACKEND_DIR}/.env"
 echo "构建 ResearchFlow 前端……"
-( cd "${FRONTEND_DIR}"; pnpm install --frozen-lockfile; pnpm build )
+# 2 核 2G 服务器在 pnpm 的默认并发下载、解压时可能被内存压力拖死。
+# 构建只在部署时执行，优先保证稳定性而不是首次安装速度。
+( cd "${FRONTEND_DIR}"; pnpm install --frozen-lockfile --network-concurrency=1 --child-concurrency=1 --reporter=append-only; pnpm build )
 require_file "${FRONTEND_DIR}/dist/index.html"
 echo "安装 ResearchFlow 后端依赖……"
 ( cd "${BACKEND_DIR}"; "${PYTHON_BIN}" -m venv .venv; .venv/bin/python -m pip install --upgrade pip; .venv/bin/python -m pip install . )
