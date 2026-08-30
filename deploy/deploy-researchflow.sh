@@ -6,8 +6,12 @@ RESEARCH_ROOT="${PROJECT_ROOT}/agents_project"
 FRONTEND_DIR="${RESEARCH_ROOT}/frontend"
 BACKEND_DIR="${RESEARCH_ROOT}/backend"
 PYTHON_BIN="${PYTHON_BIN:-python3.12}"
+# 默认将构建绑定到单核，并保留足够内存给两个后端与 Nginx。
+# 如服务器扩容，可在执行时覆盖 BUILD_CPU 与 NODE_BUILD_HEAP_MB。
+BUILD_CPU="${BUILD_CPU:-0}"
+NODE_BUILD_HEAP_MB="${NODE_BUILD_HEAP_MB:-512}"
 require_root
-require_command pnpm; require_command "${PYTHON_BIN}"; require_command rsync
+require_command pnpm; require_command "${PYTHON_BIN}"; require_command rsync; require_command taskset
 require_file "${FRONTEND_DIR}/pnpm-lock.yaml"
 require_file "${BACKEND_DIR}/pyproject.toml"
 require_env_file "${BACKEND_DIR}/.env"
@@ -17,8 +21,15 @@ echo "构建 ResearchFlow 前端……"
 (
   cd "${FRONTEND_DIR}"
   pnpm install --frozen-lockfile --network-concurrency=1 --child-concurrency=1 --reporter=append-only
-  # 给 Uvicorn、Nginx 与系统保留内存，防止 Node 在 2G 小服务器上抢占全部资源。
-  NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=768}" pnpm build
+  # tsc 与 Vite 强制串行、单核执行；Node 堆限制为 512MB，避免 2C2G 服务器失联。
+  taskset --cpu-list "${BUILD_CPU}" env \
+    UV_THREADPOOL_SIZE=1 \
+    NODE_OPTIONS="--max-old-space-size=${NODE_BUILD_HEAP_MB}" \
+    pnpm exec tsc -b
+  taskset --cpu-list "${BUILD_CPU}" env \
+    UV_THREADPOOL_SIZE=1 \
+    NODE_OPTIONS="--max-old-space-size=${NODE_BUILD_HEAP_MB}" \
+    pnpm exec vite build
 )
 require_file "${FRONTEND_DIR}/dist/index.html"
 echo "安装 ResearchFlow 后端依赖……"
