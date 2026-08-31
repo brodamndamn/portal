@@ -1,4 +1,4 @@
-param(
+﻿param(
     [Parameter(Mandatory = $true)]
     [string]$Server
 )
@@ -16,9 +16,9 @@ $remoteRoot = "/tmp/resume-frontends"
 Push-Location $isaacFrontendDirectory
 try {
     & npm ci
-    if ($LASTEXITCODE -ne 0) { throw "ISAAC 依赖安装失败。" }
+    if ($LASTEXITCODE -ne 0) { throw "ISAAC dependency installation failed." }
     & npm run build
-    if ($LASTEXITCODE -ne 0) { throw "ISAAC 前端构建失败。" }
+    if ($LASTEXITCODE -ne 0) { throw "ISAAC frontend build failed." }
 }
 finally {
     Pop-Location
@@ -27,9 +27,9 @@ finally {
 Push-Location $researchFrontendDirectory
 try {
     & pnpm install --frozen-lockfile
-    if ($LASTEXITCODE -ne 0) { throw "ResearchFlow 依赖安装失败。" }
+    if ($LASTEXITCODE -ne 0) { throw "ResearchFlow dependency installation failed." }
     & pnpm build
-    if ($LASTEXITCODE -ne 0) { throw "ResearchFlow 前端构建失败。" }
+    if ($LASTEXITCODE -ne 0) { throw "ResearchFlow frontend build failed." }
 }
 finally {
     Pop-Location
@@ -41,19 +41,19 @@ foreach ($file in @(
     (Join-Path $isaacDistDirectory "index.html"),
     (Join-Path $researchDistDirectory "index.html")
 )) {
-    if (-not (Test-Path $file)) { throw "缺少部署产物：$file" }
+    if (-not (Test-Path $file)) { throw "Missing deployment artifact: $file" }
 }
 
 & ssh $Server "mkdir -p $remoteRoot/portal $remoteRoot/isaac $remoteRoot/research"
-if ($LASTEXITCODE -ne 0) { throw "无法创建服务器临时目录。" }
+if ($LASTEXITCODE -ne 0) { throw "Unable to create the server temporary directory." }
 
 & scp (Join-Path $portalDirectory "index.html") (Join-Path $portalDirectory "styles.css") (Join-Path $portalDirectory "favicon.svg") "${Server}:$remoteRoot/portal/"
-if ($LASTEXITCODE -ne 0) { throw "Portal 上传失败。" }
+if ($LASTEXITCODE -ne 0) { throw "Portal upload failed." }
 
 & scp -r "${isaacDistDirectory}\*" "${Server}:$remoteRoot/isaac/"
-if ($LASTEXITCODE -ne 0) { throw "ISAAC 前端上传失败。" }
+if ($LASTEXITCODE -ne 0) { throw "ISAAC frontend upload failed." }
 
 & scp -r "${researchDistDirectory}\*" "${Server}:$remoteRoot/research/"
-if ($LASTEXITCODE -ne 0) { throw "ResearchFlow 前端上传失败。" }
+if ($LASTEXITCODE -ne 0) { throw "ResearchFlow frontend upload failed." }
 
-Write-Host "三个前端已在本机构建并上传到 $remoteRoot。"
+Write-Host "All frontend bundles were built locally and uploaded to $remoteRoot."
