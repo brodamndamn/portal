@@ -5,10 +5,10 @@
 
 $ErrorActionPreference = "Stop"
 $deployDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
-$projectRoot = Split-Path -Parent $deployDirectory
-$portalDirectory = Join-Path $projectRoot "portal"
-$isaacFrontendDirectory = Join-Path $projectRoot "ISAAC\frontend"
-$researchFrontendDirectory = Join-Path $projectRoot "agents_project\frontend"
+$portalDirectory = Split-Path -Parent $deployDirectory
+$workspaceRoot = Split-Path -Parent $portalDirectory
+$isaacFrontendDirectory = Join-Path $workspaceRoot "ISAAC\frontend"
+$researchFrontendDirectory = Join-Path $workspaceRoot "agents_project\frontend"
 $isaacDistDirectory = Join-Path $isaacFrontendDirectory "dist"
 $researchDistDirectory = Join-Path $researchFrontendDirectory "dist"
 $remoteRoot = "/tmp/resume-frontends"
