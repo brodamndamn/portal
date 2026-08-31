@@ -6,11 +6,10 @@ RESEARCH_ROOT="${PROJECT_ROOT}/agents_project"
 FRONTEND_DIR="${RESEARCH_ROOT}/frontend"
 BACKEND_DIR="${RESEARCH_ROOT}/backend"
 PYTHON_BIN="${PYTHON_BIN:-python3.12}"
-# 默认将构建绑定到单核，并保留足够内存给两个后端与 Nginx。
-# 如服务器扩容，可在执行时覆盖 BUILD_CPU 与 NODE_BUILD_HEAP_MB。
+# 仅在显式开启服务器构建时使用以下限制；2C2G 服务器默认跳过前端构建。
 BUILD_CPU="${BUILD_CPU:-0}"
 NODE_BUILD_HEAP_MB="${NODE_BUILD_HEAP_MB:-384}"
-SKIP_RESEARCHFLOW_FRONTEND_BUILD="${SKIP_RESEARCHFLOW_FRONTEND_BUILD:-0}"
+SKIP_RESEARCHFLOW_FRONTEND_BUILD="${SKIP_RESEARCHFLOW_FRONTEND_BUILD:-1}"
 require_root
 require_command pnpm; require_command "${PYTHON_BIN}"; require_command rsync; require_command taskset
 require_file "${FRONTEND_DIR}/pnpm-lock.yaml"
@@ -18,6 +17,7 @@ require_file "${BACKEND_DIR}/pyproject.toml"
 require_env_file "${BACKEND_DIR}/.env"
 if [[ "${SKIP_RESEARCHFLOW_FRONTEND_BUILD}" == "1" ]]; then
   echo "跳过服务器前端构建：使用已上传到 ${WEB_ROOT}/research 的静态文件。"
+  require_file "${WEB_ROOT}/research/index.html"
 else
   echo "构建 ResearchFlow 前端……"
   # 2 核 2G 服务器在 pnpm 的默认并发下载、解压时可能被内存压力拖死。

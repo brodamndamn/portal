@@ -40,3 +40,20 @@ sudo bash portal/deploy/deploy-all.sh
 ```
 
 脚本会构建两个前端、同步静态文件、重启两个 FastAPI systemd 服务并运行健康检查；不会重启 MySQL。Nginx 在校验通过后才会 reload。旧 `/api/` 与 `/uploads/` 兼容路由保留给 ISAAC 历史数据。
+
+## ResearchFlow 前端：2 核 2GB 服务器必须本机打包
+
+该服务器规格不应运行 ResearchFlow 的 TypeScript/Vite 构建。每次修改 ResearchFlow 前端后，在 Windows 本机运行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "D:\\暑假task\\resume_projects\\portal\\deploy\\build-researchflow-frontend.ps1" -Server "<服务器用户>@<服务器IP>"
+```
+
+上传完成后，服务器执行：
+
+```bash
+sudo rsync -a --delete /tmp/researchflow-dist/ /var/www/research/
+sudo SKIP_RESEARCHFLOW_FRONTEND_BUILD=1 bash /opt/resume-projects/portal/deploy/deploy-researchflow.sh
+```
+
+`deploy-researchflow.sh` 现在默认跳过服务器前端构建；如果静态文件未先上传，它会安全退出，而不会尝试构建并耗尽内存。
