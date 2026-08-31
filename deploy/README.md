@@ -46,3 +46,21 @@ sudo SKIP_RESEARCHFLOW_FRONTEND_BUILD=1 bash /opt/resume-projects/portal/deploy/
 ```
 
 只有服务器扩容且确有需要时，才显式传入 `SKIP_RESEARCHFLOW_FRONTEND_BUILD=0` 让服务器自行构建。
+
+## 本机构建、服务器不构建前端
+
+2 核 2GB 服务器使用以下流程。它不会复制或修改服务器中的 `.env`：
+
+1. Windows 本机构建并上传三个静态站点：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "D:\暑假task\resume_projects\portal\deploy\build-and-upload-frontends.ps1" -Server "admin@47.103.69.8"
+```
+
+2. 先将三个仓库的后端源码更新到服务器后，在服务器执行：
+
+```bash
+sudo bash /opt/resume-projects/portal/deploy/deploy-prebuilt-all.sh
+```
+
+首次替换原 ISAAC 根路由时，命令前加上 `REPLACE_CONFLICTING_NGINX=1`。`deploy-prebuilt-all.sh` 只同步已上传的静态产物；ISAAC 和 ResearchFlow 都默认跳过服务器前端构建。
