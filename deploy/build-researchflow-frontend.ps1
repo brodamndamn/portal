@@ -19,8 +19,10 @@ finally {
 }
 
 if (-not (Test-Path (Join-Path $distDirectory "index.html"))) {
-    throw "前端构建未生成 dist/index.html。"
+    throw "Frontend build did not produce dist/index.html."
 }
 
-scp -r "$distDirectory" "${Server}:/tmp/researchflow-dist"
-Write-Host "前端构建产物已上传到 ${Server}:/tmp/researchflow-dist"
+$remoteDirectory = "/tmp/researchflow-dist"
+$remoteTarget = "$Server`:$remoteDirectory"
+scp -r $distDirectory $remoteTarget
+Write-Host "Frontend build uploaded to $remoteTarget"
